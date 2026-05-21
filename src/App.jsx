@@ -110,33 +110,36 @@ function App() {
           </div>
 
           {/* Audio Controls */}
-          <div className="flex items-center gap-2 md:gap-4">
+          <div className="flex items-center gap-2 md:gap-4 shrink-0">
             <button
               onClick={toggleAnthem}
-              className={`flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-1.5 font-bebas text-sm md:text-base tracking-widest rounded border transition-all duration-300 hover-shake ${
-                isPlayingAnthem 
-                  ? 'bg-white text-mjp-red border-white shadow-[0_0_15px_rgba(255,255,255,0.8)]' 
-                  : 'bg-transparent text-white border-mjp-red hover:bg-mjp-red/20'
-              }`}
+              className={`flex items-center justify-center whitespace-nowrap gap-1.5 px-3 py-2 sm:px-3 md:px-4 md:py-1.5 font-bebas text-sm md:text-base tracking-widest rounded border transition-all duration-300 hover-shake ${isPlayingAnthem
+                ? 'bg-white text-mjp-red border-white shadow-[0_0_15px_rgba(255,255,255,0.8)]'
+                : 'bg-transparent text-white border-mjp-red hover:bg-mjp-red/20'
+                }`}
             >
               {isPlayingAnthem ? (
                 <>
                   <div className="flex items-end gap-[2px] h-3 md:h-4">
-                    <span className="w-1 bg-mjp-red h-full animate-[bounce_1s_infinite]"></span>
-                    <span className="w-1 bg-mjp-red h-2/3 animate-[bounce_0.8s_infinite_0.1s]"></span>
-                    <span className="w-1 bg-mjp-red h-4/5 animate-[bounce_1.2s_infinite_0.2s]"></span>
+                    <span className="w-[2px] sm:w-1 bg-mjp-red h-full animate-[bounce_1s_infinite]"></span>
+                    <span className="w-[2px] sm:w-1 bg-mjp-red h-2/3 animate-[bounce_0.8s_infinite_0.1s]"></span>
+                    <span className="w-[2px] sm:w-1 bg-mjp-red h-4/5 animate-[bounce_1.2s_infinite_0.2s]"></span>
                   </div>
-                  PAUSE
+                  <span className="hidden sm:inline">PAUSE</span>
                 </>
               ) : (
-                '🎵 ANTHEM'
+                <>
+                  <span className="text-base sm:text-sm">🎵</span>
+                  <span className="hidden sm:inline">ANTHEM</span>
+                </>
               )}
             </button>
             <button
               onClick={() => playMosquitoBuzz(1.5)}
-              className="px-3 py-1.5 md:px-4 md:py-1.5 bg-mjp-red hover:bg-mjp-yellow text-white hover:text-black font-bebas text-sm md:text-base tracking-widest rounded border border-white hover:border-black transition-all duration-300 hover-shake"
+              className="flex items-center justify-center whitespace-nowrap gap-1.5 px-3 py-2 sm:px-3 md:px-4 md:py-1.5 bg-mjp-red hover:bg-mjp-yellow text-white hover:text-black font-bebas text-sm md:text-base tracking-widest rounded border border-white hover:border-black transition-all duration-300 hover-shake"
             >
-              QUICK BUZZ 🔊
+              <span className="hidden sm:inline">QUICK BUZZ</span>
+              <span className="text-base sm:text-sm">🔊</span>
             </button>
           </div>
         </div>
