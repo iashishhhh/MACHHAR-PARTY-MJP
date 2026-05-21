@@ -82,7 +82,7 @@ export default function Hero() {
 
         <img
           src={logoImg}
-          alt="Mucchar Janta Party Logo"
+          alt="MACHHAR Janta Party Logo"
           className="relative w-44 h-44 md:w-64 md:h-64 object-contain mx-auto rounded-full border-4 border-mjp-red p-2 bg-mjp-black/90 shadow-[0_0_30px_rgba(229,62,62,0.5)] group-hover:scale-105 group-hover:rotate-6 transition-all duration-300 animate-float-slow"
         />
 
@@ -100,7 +100,7 @@ export default function Hero() {
         className="z-10"
       >
         <h1 className="text-6xl md:text-8xl lg:text-9xl font-bebas text-glow-red text-mjp-red font-black tracking-tight leading-none">
-          MUCCHAR JANTA <br className="hidden md:block" />
+          MACHHAR JANTA <br className="hidden md:block" />
           <span className="text-mjp-yellow text-glow-yellow">PARTY</span>
         </h1>
       </motion.div>

@@ -36,39 +36,38 @@ function App() {
   return (
     <div className="relative min-h-screen bg-mjp-black text-white selection:bg-mjp-red selection:text-white overflow-hidden">
       {/* Sticky Premium Navbar */}
-      <nav className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ${
-        scrolled 
-          ? 'bg-mjp-black/90 backdrop-blur-md border-b border-mjp-red/30 py-3 shadow-[0_4px_20px_rgba(229,62,62,0.15)]' 
+      <nav className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ${scrolled
+          ? 'bg-mjp-black/90 backdrop-blur-md border-b border-mjp-red/30 py-3 shadow-[0_4px_20px_rgba(229,62,62,0.15)]'
           : 'bg-transparent py-5'
-      }`}>
+        }`}>
         <div className="max-w-6xl mx-auto px-4 flex justify-between items-center">
           {/* Brand/Logo */}
-          <div 
-            onClick={() => handleNavClick('root')} 
+          <div
+            onClick={() => handleNavClick('root')}
             className="flex items-center gap-2 cursor-pointer group"
           >
             <span className="text-2xl group-hover:scale-125 transition-transform duration-300">🦟</span>
             <span className="font-bebas text-2xl md:text-3xl tracking-wider text-mjp-red group-hover:text-mjp-yellow transition-colors duration-300">
-              MUCCHAR JANTA <span className="text-mjp-yellow group-hover:text-mjp-red transition-colors duration-300">PARTY</span>
+              MACHHAR JANTA <span className="text-mjp-yellow group-hover:text-mjp-red transition-colors duration-300">PARTY</span>
             </span>
           </div>
 
           {/* Nav Links */}
           <div className="hidden md:flex items-center gap-6 font-mono text-xs uppercase tracking-wider">
-            <button 
-              onClick={() => handleNavClick('manifesto')} 
+            <button
+              onClick={() => handleNavClick('manifesto')}
               className="text-gray-300 hover:text-mjp-yellow hover-shake transition-colors"
             >
               Manifesto
             </button>
-            <button 
-              onClick={() => handleNavClick('ministers')} 
+            <button
+              onClick={() => handleNavClick('ministers')}
               className="text-gray-300 hover:text-mjp-red hover-shake transition-colors"
             >
               Ministers
             </button>
-            <button 
-              onClick={() => handleNavClick('join-section')} 
+            <button
+              onClick={() => handleNavClick('join-section')}
               className="text-gray-300 hover:text-mjp-yellow hover-shake transition-colors"
             >
               Join Us

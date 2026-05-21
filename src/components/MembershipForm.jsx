@@ -33,7 +33,7 @@ export default function MembershipForm() {
     bitesCount: '',
     profession: PROFESSIONS[0]
   });
-  
+
   const [showModal, setShowModal] = useState(false);
 
   const handleChange = (e) => {
@@ -45,7 +45,7 @@ export default function MembershipForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Play synthesis sound
     playMosquitoBuzz(2.5);
 
@@ -74,11 +74,11 @@ export default function MembershipForm() {
   return (
     <section id="join-section" className="py-24 px-4 bg-mjp-black relative overflow-hidden bg-grid-pattern poster-grunge">
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-mjp-red/10 rounded-full blur-[100px] pointer-events-none" />
-      
+
       <div className="max-w-3xl mx-auto relative z-10">
         <div className="text-center mb-12">
           <h2 className="text-5xl md:text-7xl font-bebas text-mjp-yellow text-glow-yellow tracking-wider">
-            BECOME A TRUE MUCCHAR
+            BECOME A TRUE MACHHAR
           </h2>
           <p className="text-gray-400 font-poppins text-sm md:text-base mt-2">
             Surrender your platelets. Give up your sleep. Join the revolution.
@@ -86,7 +86,7 @@ export default function MembershipForm() {
         </div>
 
         {/* Membership Form */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -169,7 +169,7 @@ export default function MembershipForm() {
 
             {/* Terms Disclaimer */}
             <p className="text-[10px] text-gray-500 font-poppins leading-relaxed">
-              * By clicking "Become a True Mucchar", you authorize all MJP members, mosquitoes, larvae, and local gnats to draw up to 50ml of sweet juice per night. Fans must be kept at speed 2 or below.
+              * By clicking "Become a True MACHHAR", you authorize all MJP members, mosquitoes, larvae, and local gnats to draw up to 50ml of sweet juice per night. Fans must be kept at speed 2 or below.
             </p>
 
             {/* Submit Button */}
@@ -178,7 +178,7 @@ export default function MembershipForm() {
                 type="submit"
                 className="w-full bg-mjp-red hover:bg-mjp-yellow text-white hover:text-black font-bebas text-3xl tracking-widest py-4 rounded border-2 border-white hover:border-black shadow-[0_0_20px_rgba(229,62,62,0.5)] transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] hover-shake"
               >
-                BECOME A TRUE MUCCHAR 🦟
+                BECOME A TRUE MACHHAR 🦟
               </button>
             </div>
           </form>
@@ -197,7 +197,7 @@ export default function MembershipForm() {
               className="bg-mjp-black border-2 border-mjp-yellow rounded-2xl w-full max-w-lg p-6 md:p-8 shadow-[0_0_50px_rgba(236,201,75,0.4)] relative"
             >
               {/* Close Button */}
-              <button 
+              <button
                 onClick={closeModal}
                 className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
               >

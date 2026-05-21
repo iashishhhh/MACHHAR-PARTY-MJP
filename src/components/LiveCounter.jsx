@@ -79,7 +79,7 @@ export default function LiveCounter() {
             MJP Operations Dashboard
           </span>
           <h2 className="text-5xl md:text-7xl font-bebas text-white tracking-wider mt-4">
-            LIVE MUCCHAR <span className="text-mjp-yellow text-glow-yellow">TRACKER</span>
+            LIVE MACHHAR <span className="text-mjp-yellow text-glow-yellow">TRACKER</span>
           </h2>
           <p className="text-gray-400 font-poppins text-sm md:text-base mt-2 max-w-lg mx-auto">
             Real-time satellite feeds displaying nationwide mosquito bite frequency, sugar extraction, and human distress indices.
