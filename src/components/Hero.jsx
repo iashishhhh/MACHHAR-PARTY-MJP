@@ -3,7 +3,11 @@ import { motion } from 'framer-motion';
 import { playMosquitoBuzz } from '../utils/audio';
 import logoImg from '../assets/machhar.png';
 
-export default function Hero() {
+export default function Hero({ hero = {} }) {
+  const badge = hero.badge ?? 'Official Campaign Page 2026';
+  const slogan = hero.slogan ?? '"Khoon sabka piyenge." 🩸';
+  const showJoin = hero.showJoinButton !== false;
+  const showDonate = hero.showDonateButton !== false;
   const handleJoinClick = (e) => {
     e.preventDefault();
     playMosquitoBuzz(1.2);
@@ -66,7 +70,7 @@ export default function Hero() {
         transition={{ duration: 0.8 }}
         className="z-10 mb-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-mjp-yellow bg-mjp-yellow/10 text-mjp-yellow text-xs md:text-sm font-semibold tracking-widest uppercase"
       >
-        <span className="animate-pulse">●</span> Official Campaign Page 2026
+        <span className="animate-pulse">●</span> {badge}
       </motion.div>
 
       {/* Huge Mascot Logo */}
@@ -112,29 +116,35 @@ export default function Hero() {
         transition={{ delay: 0.6, duration: 0.5 }}
         className="z-10 mt-4 md:mt-6 text-xl md:text-3xl font-poppins italic text-gray-300 font-medium tracking-wide flex items-center justify-center gap-2"
       >
-        “Khoon sabka piyenge.” 🩸
+        {slogan}
       </motion.p>
 
       {/* CTA Buttons */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8, duration: 0.6 }}
-        className="z-10 mt-8 md:mt-12 flex flex-col sm:flex-row gap-4 justify-center items-center w-full max-w-md mx-auto"
-      >
-        <button
-          onClick={handleJoinClick}
-          className="w-full sm:w-auto px-8 py-4 bg-mjp-red hover:bg-mjp-red-dark text-white font-bebas text-2xl tracking-wider rounded border-2 border-white hover:border-mjp-yellow shadow-[0_0_20px_rgba(229,62,62,0.6)] transition-all duration-300 transform hover:scale-105 active:scale-95 hover-shake"
+      {(showJoin || showDonate) && (
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.6 }}
+          className="z-10 mt-8 md:mt-12 flex flex-col sm:flex-row gap-4 justify-center items-center w-full max-w-md mx-auto"
         >
-          JOIN THE PARTY
-        </button>
-        <button
-          onClick={handleDonateClick}
-          className="w-full sm:w-auto px-8 py-4 bg-mjp-black border-2 border-mjp-yellow text-mjp-yellow hover:text-black hover:bg-mjp-yellow font-bebas text-2xl tracking-wider rounded shadow-[0_0_15px_rgba(236,201,75,0.3)] transition-all duration-300 transform hover:scale-105 active:scale-95 hover-shake"
-        >
-          DONATE BLOOD
-        </button>
-      </motion.div>
+          {showJoin && (
+            <button
+              onClick={handleJoinClick}
+              className="w-full sm:w-auto px-8 py-4 bg-mjp-red hover:bg-mjp-red-dark text-white font-bebas text-2xl tracking-wider rounded border-2 border-white hover:border-mjp-yellow shadow-[0_0_20px_rgba(229,62,62,0.6)] transition-all duration-300 transform hover:scale-105 active:scale-95 hover-shake"
+            >
+              JOIN THE PARTY
+            </button>
+          )}
+          {showDonate && (
+            <button
+              onClick={handleDonateClick}
+              className="w-full sm:w-auto px-8 py-4 bg-mjp-black border-2 border-mjp-yellow text-mjp-yellow hover:text-black hover:bg-mjp-yellow font-bebas text-2xl tracking-wider rounded shadow-[0_0_15px_rgba(236,201,75,0.3)] transition-all duration-300 transform hover:scale-105 active:scale-95 hover-shake"
+            >
+              DONATE BLOOD
+            </button>
+          )}
+        </motion.div>
+      )}
 
       {/* Vintage Campaign Badge overlay style lines */}
       <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-mjp-red via-mjp-yellow to-mjp-red shadow-[0_0_10px_rgba(229,62,62,0.8)]" />

@@ -9,21 +9,58 @@ import Testimonials from './components/Testimonials';
 import Footer from './components/Footer';
 import BuzzButton from './components/BuzzButton';
 import GlobalMosquitoes from './components/GlobalMosquitoes';
+import MaintenanceScreen from './components/MaintenanceScreen';
+import AdminLogin from './components/AdminLogin';
+import AdminDashboard from './components/AdminDashboard';
+import AnnouncementBanner from './components/AnnouncementBanner';
+import FakeVisitorBar from './components/FakeVisitorBar';
+import WelcomeModal from './components/WelcomeModal';
+import { FakeVisitorProvider } from './context/FakeVisitorContext';
+import { SocialProvider } from './context/SocialContext';
+import { ShieldAlert } from 'lucide-react';
 import { playMosquitoBuzz } from './utils/audio';
+import { loadSiteConfigFromStorage, mergeSiteConfig } from './utils/siteConfig';
+import { useVisitorCount } from './hooks/useVisitorCount';
 import anthemSong from './assets/Khoon-Tax Machhar.mp3';
+import { ref, onValue } from 'firebase/database';
+import { db } from './firebase';
 
 function App() {
   const [scrolled, setScrolled] = useState(false);
-  const [visitCount, setVisitCount] = useState(0);
+  const visitCount = useVisitorCount();
   const [isPlayingAnthem, setIsPlayingAnthem] = useState(false);
+  const [currentView, setCurrentView] = useState(() =>
+    localStorage.getItem('mjp_admin') === 'true' ? 'admin_dashboard' : 'main'
+  ); // 'main', 'admin_login', 'admin_dashboard'
+  
+  const [siteConfig, setSiteConfig] = useState(loadSiteConfigFromStorage);
   const anthemRef = useRef(null);
 
   useEffect(() => {
-    let visits = localStorage.getItem('mjp_visits') || 0;
-    visits = parseInt(visits, 10) + 1;
-    localStorage.setItem('mjp_visits', visits);
-    setVisitCount(visits);
+    if (!db) return;
+    const configRef = ref(db, 'siteConfig');
+    const unsubscribe = onValue(
+      configRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const config = snapshot.val();
+          setSiteConfig((prev) => mergeSiteConfig(prev, config));
+          localStorage.setItem('mjp_site_config', JSON.stringify(config));
+          localStorage.setItem('mjp_site_active', String(config.isActive));
+          localStorage.setItem('mjp_site_msg', config.message);
+          if (config.sections) {
+            localStorage.setItem('mjp_site_sections', JSON.stringify(config.sections));
+          }
+        }
+      },
+      (error) => {
+        console.error('Firebase read error (siteConfig):', error);
+      }
+    );
+    return () => unsubscribe();
+  }, []);
 
+  useEffect(() => {
     anthemRef.current = new Audio(anthemSong);
     anthemRef.current.loop = true;
     return () => {
@@ -33,6 +70,7 @@ function App() {
     };
   }, []);
 
+
   const toggleAnthem = () => {
     if (isPlayingAnthem) {
       anthemRef.current.pause();
@@ -41,6 +79,22 @@ function App() {
     }
     setIsPlayingAnthem(!isPlayingAnthem);
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Secret Admin Shortcut: Ctrl + Shift + A
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') {
+        e.preventDefault();
+        if (localStorage.getItem('mjp_admin') === 'true') {
+          setCurrentView('admin_dashboard');
+        } else {
+          setCurrentView('admin_login');
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -54,6 +108,36 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleAdminLogout = () => {
+    localStorage.removeItem('mjp_admin');
+    setCurrentView('main');
+  };
+
+  if (currentView === 'admin_login') {
+    return <AdminLogin onLoginSuccess={() => setCurrentView('admin_dashboard')} onCancel={() => setCurrentView('main')} />;
+  }
+
+  if (currentView === 'admin_dashboard') {
+    // Basic protection (redirects if somehow accessed without login)
+    if (localStorage.getItem('mjp_admin') !== 'true') {
+      setCurrentView('admin_login');
+      return null;
+    }
+    return (
+      <AdminDashboard
+        siteConfig={siteConfig}
+        setSiteConfig={setSiteConfig}
+        onLogout={handleAdminLogout}
+        onPreviewSite={() => setCurrentView('main')}
+        visitCount={visitCount}
+      />
+    );
+  }
+
+  if (!siteConfig.isActive) {
+    return <MaintenanceScreen message={siteConfig.message} />;
+  }
+
   const handleNavClick = (id) => {
     playMosquitoBuzz(0.8);
     const element = document.getElementById(id);
@@ -63,7 +147,11 @@ function App() {
   };
 
   return (
-    <div className="relative min-h-screen bg-mjp-black text-white selection:bg-mjp-red selection:text-white overflow-hidden">
+    <FakeVisitorProvider>
+    <SocialProvider>
+    <div className="relative min-h-screen bg-mjp-black text-white selection:bg-mjp-red selection:text-white overflow-hidden pb-14">
+      <WelcomeModal />
+      <AnnouncementBanner announcement={siteConfig.announcement} />
       {/* Sticky Premium Navbar */}
       <nav className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ${scrolled
         ? 'bg-mjp-black/90 backdrop-blur-md border-b border-mjp-red/30 py-3 shadow-[0_4px_20px_rgba(229,62,62,0.15)]'
@@ -73,7 +161,8 @@ function App() {
           {/* Brand/Logo */}
           <div
             onClick={() => handleNavClick('root')}
-            className="flex items-center gap-2 cursor-pointer group"
+            className="flex items-center gap-2 cursor-pointer group select-none"
+            title="Logo"
           >
             <span className="text-2xl group-hover:scale-125 transition-transform duration-300">🦟</span>
             <span className="font-bebas text-2xl md:text-3xl tracking-wider text-mjp-red group-hover:text-mjp-yellow transition-colors duration-300">
@@ -146,40 +235,51 @@ function App() {
       </nav>
 
       {/* Hero Section */}
-      <Hero />
+      <Hero hero={siteConfig.hero} />
 
       {/* Manifesto Section */}
-      <Manifesto />
+      {siteConfig.sections.manifesto && <Manifesto />}
 
       {/* Live Operations Counter Dashboard */}
-      <LiveCounter />
+      {siteConfig.sections.liveCounter && <LiveCounter />}
 
       {/* Ministers Cabinet Profile Cards */}
-      <Ministers />
+      {siteConfig.sections.ministers && <Ministers />}
 
       {/* Leadership & Founders Section */}
-      <Leadership />
+      {siteConfig.sections.leadership && <Leadership />}
 
       {/* Membership Registration Form & Modal */}
-      <MembershipForm />
+      {siteConfig.sections.membership && (
+        <MembershipForm membership={siteConfig.membership} />
+      )}
 
-      {/* Testimonials Grievances Reviews */}
+      {/* Testimonials — always on so footer comments can appear here */}
       <Testimonials />
 
       {/* Footer Disclaimer & Social Links */}
-      <Footer />
+      <Footer onAdminTrigger={() => setCurrentView('admin_login')} />
+
+      {localStorage.getItem('mjp_admin') === 'true' && (
+        <button
+          onClick={() => setCurrentView('admin_dashboard')}
+          className="fixed bottom-6 left-6 z-50 flex items-center gap-2 px-4 py-2.5 bg-mjp-red/90 hover:bg-mjp-red border border-white/20 rounded-full shadow-[0_0_20px_rgba(229,62,62,0.5)] font-mono text-xs uppercase tracking-widest text-white backdrop-blur-sm transition-all hover:scale-105"
+          title="Back to Admin Panel (Ctrl+Shift+A)"
+        >
+          <ShieldAlert size={14} /> Admin Panel
+        </button>
+      )}
 
       {/* On-demand Buzzing Sound & Custom Toast System */}
       <BuzzButton />
 
       {/* Viewport-flying Interactive Mosquitoes */}
-      <GlobalMosquitoes />
+      {siteConfig.sections.mosquitoes && <GlobalMosquitoes />}
 
-      {/* Visitor Counter */}
-      <div className="fixed bottom-4 left-4 z-50 bg-mjp-black/80 border border-mjp-red/50 text-mjp-yellow px-3 py-1.5 rounded-md font-mono text-xs flex items-center gap-2 shadow-[0_0_10px_rgba(229,62,62,0.3)]">
-        <span className="text-mjp-red">👁️</span> Visits: {visitCount}
-      </div>
+      <FakeVisitorBar />
     </div>
+    </SocialProvider>
+    </FakeVisitorProvider>
   );
 }
 

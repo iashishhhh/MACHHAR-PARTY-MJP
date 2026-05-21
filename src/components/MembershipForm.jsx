@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShieldCheck, Heart, User, Briefcase, HelpCircle, MessageSquare, X } from 'lucide-react';
+import { ShieldCheck, Heart, User, Briefcase, HelpCircle, MessageSquare, X, Mail } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { playMosquitoBuzz } from '../utils/audio';
 
@@ -26,9 +26,14 @@ const PROFESSIONS = [
   "True Supporter of Buzzing"
 ];
 
-export default function MembershipForm() {
+export default function MembershipForm({ membership = {} }) {
+  const isOpen = membership.open !== false;
+  const closedMessage =
+    membership.closedMessage ||
+    'Membership registrations are paused. Try again later!';
   const [formData, setFormData] = useState({
     name: '',
+    email: '',
     bloodGroup: BLOOD_GROUPS[0],
     bitesCount: '',
     profession: PROFESSIONS[0],
@@ -48,6 +53,12 @@ export default function MembershipForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
+
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim());
+    if (!emailOk) {
+      alert('Please enter a valid email address so we can send your gift.');
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -89,6 +100,7 @@ export default function MembershipForm() {
     // Reset form
     setFormData({
       name: '',
+      email: '',
       bloodGroup: BLOOD_GROUPS[0],
       bitesCount: '',
       profession: PROFESSIONS[0],
@@ -110,7 +122,19 @@ export default function MembershipForm() {
           </p>
         </div>
 
-        {/* Membership Form */}
+        {!isOpen ? (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="glass-panel p-10 md:p-14 rounded-2xl border-2 border-mjp-yellow/30 text-center"
+          >
+            <ShieldCheck size={48} className="mx-auto text-mjp-yellow mb-4 opacity-80" />
+            <p className="text-lg md:text-xl text-gray-300 font-poppins leading-relaxed">
+              {closedMessage}
+            </p>
+          </motion.div>
+        ) : (
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -134,6 +158,25 @@ export default function MembershipForm() {
               />
             </div>
 
+            <div>
+              <label className="block text-xs md:text-sm font-mono text-mjp-yellow uppercase tracking-wider mb-2 flex items-center gap-2">
+                <Mail size={14} className="text-mjp-red" /> Email (for your gift)
+              </label>
+              <input
+                type="email"
+                name="email"
+                required
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="your.email@example.com"
+                autoComplete="email"
+                className="w-full bg-mjp-black/90 border border-mjp-red/30 focus:border-mjp-yellow rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none transition-colors duration-200"
+              />
+              <p className="text-[10px] text-gray-500 font-mono mt-1.5">
+                Use your correct email — your welcome gift will be sent here.
+              </p>
+            </div>
+
             {/* Grid for Blood Group & Bites Count */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Blood Group */}
@@ -155,7 +198,6 @@ export default function MembershipForm() {
                 </select>
               </div>
 
-              {/* Kitni baar kaata gaya? */}
               <div>
                 <label className="block text-xs md:text-sm font-mono text-mjp-yellow uppercase tracking-wider mb-2 flex items-center gap-2">
                   <HelpCircle size={14} className="text-mjp-red" /> Bite Count
@@ -228,6 +270,7 @@ export default function MembershipForm() {
             </div>
           </form>
         </motion.div>
+        )}
       </div>
 
       {/* Fake Success Popup Modal */}
@@ -267,6 +310,9 @@ export default function MembershipForm() {
                 <div className="bg-mjp-red/10 border border-mjp-red/30 p-4 rounded-lg text-left text-xs md:text-sm text-gray-300 font-poppins space-y-2 leading-relaxed">
                   <p>
                     <strong>Hi {formData.name},</strong> your profile has been successfully cataloged!
+                  </p>
+                  <p>
+                    🎁 Your welcome gift will be sent to <strong>{formData.email}</strong> — keep an eye on your inbox (and spam, mosquitoes love hiding there).
                   </p>
                   <p>
                     Our elite squadron of night-fighter mosquitoes (headed by Dr. Aedes Aegypti) will visit your bedside tonight around <strong>2:00 AM</strong> to extract your initial membership dues (approximately <strong>30ml</strong> of <em>{formData.bloodGroup}</em> juice).

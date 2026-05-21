@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Activity, ShieldAlert, Users, Moon } from 'lucide-react';
+import { Activity, ShieldAlert, Users, Moon, Eye } from 'lucide-react';
+import { useFakeVisitor } from '../context/FakeVisitorContext';
 
 export default function LiveCounter() {
+  const siteVisitors = useFakeVisitor();
   // Initial starting values
   const [stats, setStats] = useState({
     bites: 4892408,
@@ -86,7 +88,30 @@ export default function LiveCounter() {
           </p>
         </div>
 
-        {/* Stats Grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="glass-panel p-6 rounded-xl border-2 border-mjp-yellow/40 mb-8 flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-4"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-lg bg-mjp-yellow/10 border border-mjp-yellow/30 flex items-center justify-center">
+              <Eye className="w-6 h-6 text-mjp-yellow" />
+            </div>
+            <div>
+              <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">
+                Live site visitors
+              </span>
+              <p className="text-4xl md:text-5xl font-bebas text-mjp-yellow tabular-nums">
+                {siteVisitors.toLocaleString('en-IN')}
+              </p>
+            </div>
+          </div>
+          <span className="text-[9px] font-mono text-green-400 inline-flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping" /> Live syncing...
+          </span>
+        </motion.div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {statsList.map((stat) => {
             const Icon = stat.icon;
