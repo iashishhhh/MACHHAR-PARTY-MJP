@@ -3,6 +3,7 @@ import Hero from './components/Hero';
 import Manifesto from './components/Manifesto';
 import LiveCounter from './components/LiveCounter';
 import Ministers from './components/Ministers';
+import Leadership from './components/Leadership';
 import MembershipForm from './components/MembershipForm';
 import Testimonials from './components/Testimonials';
 import Footer from './components/Footer';
@@ -67,8 +68,14 @@ function App() {
               Ministers
             </button>
             <button
-              onClick={() => handleNavClick('join-section')}
+              onClick={() => handleNavClick('leadership')}
               className="text-gray-300 hover:text-mjp-yellow hover-shake transition-colors"
+            >
+              Leadership
+            </button>
+            <button
+              onClick={() => handleNavClick('join-section')}
+              className="text-gray-300 hover:text-mjp-red hover-shake transition-colors"
             >
               Join Us
             </button>
@@ -97,6 +104,9 @@ function App() {
 
       {/* Ministers Cabinet Profile Cards */}
       <Ministers />
+
+      {/* Leadership & Founders Section */}
+      <Leadership />
 
       {/* Membership Registration Form & Modal */}
       <MembershipForm />

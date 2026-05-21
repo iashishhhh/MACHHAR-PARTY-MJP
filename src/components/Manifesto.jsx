@@ -48,6 +48,15 @@ const PROMISES = [
     badge: "HUMANITARIAN JUSTICE",
     color: "rgba(229, 62, 62, 0.4)",
     hoverGlow: "shadow-[0_0_25px_rgba(229,62,62,0.6)]"
+  },
+  {
+    id: 6,
+    title: "No-Net Wildlife Sanctuaries",
+    description: "Every bedroom must declare 20% of its area as a net-free mosquito wildlife sanctuary. Cooperate with native hunters or face administrative penalties!",
+    icon: Ban,
+    badge: "HABITAT PROTECTION",
+    color: "rgba(236, 201, 75, 0.4)",
+    hoverGlow: "shadow-[0_0_25px_rgba(236,201,75,0.5)]"
   }
 ];
 
@@ -70,7 +79,7 @@ export default function Manifesto() {
             transition={{ duration: 0.6 }}
             className="text-5xl md:text-7xl font-bebas text-mjp-yellow text-glow-yellow tracking-wider"
           >
-            OUR 5 BZZZZY PROMISES
+            OUR 6 BZZZZY PROMISES
           </motion.h2>
           <motion.p
             initial={{ opacity: 0 }}

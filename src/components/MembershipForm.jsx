@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShieldCheck, Heart, User, Briefcase, HelpCircle, X } from 'lucide-react';
+import { ShieldCheck, Heart, User, Briefcase, HelpCircle, MessageSquare, X } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { playMosquitoBuzz } from '../utils/audio';
 
@@ -31,7 +31,8 @@ export default function MembershipForm() {
     name: '',
     bloodGroup: BLOOD_GROUPS[0],
     bitesCount: '',
-    profession: PROFESSIONS[0]
+    profession: PROFESSIONS[0],
+    thoughts: ''
   });
 
   const [showModal, setShowModal] = useState(false);
@@ -43,21 +44,45 @@ export default function MembershipForm() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+
     e.preventDefault();
 
-    // Play synthesis sound
-    playMosquitoBuzz(2.5);
+    try {
 
-    // Fire confetti for premium success feel!
-    confetti({
-      particleCount: 150,
-      spread: 80,
-      origin: { y: 0.6 },
-      colors: ['#E53E3E', '#ECC94B', '#000000', '#ffffff']
-    });
+      const response = await fetch(
+        "https://script.google.com/macros/s/AKfycbyzjrPef0l3S9VAXb0mF8IvFF28p3PGm_3dnXJKe8Aawzk3dJ0nPKXqnKbc9DOLLx-QrA/exec",
+        {
+          method: "POST",
+          body: JSON.stringify(formData),
+        }
+      );
 
-    setShowModal(true);
+      const result = await response.json();
+
+      console.log(result);
+
+      // Play synthesis sound
+      playMosquitoBuzz(2.5);
+
+      // Fire confetti
+      confetti({
+        particleCount: 150,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: ['#E53E3E', '#ECC94B', '#000000', '#ffffff']
+      });
+
+      setShowModal(true);
+
+    } catch (error) {
+
+      console.error("Submission Error:", error);
+
+      alert("Failed to submit form");
+
+    }
+
   };
 
   const closeModal = () => {
@@ -67,7 +92,8 @@ export default function MembershipForm() {
       name: '',
       bloodGroup: BLOOD_GROUPS[0],
       bitesCount: '',
-      profession: PROFESSIONS[0]
+      profession: PROFESSIONS[0],
+      thoughts: ''
     });
   };
 
@@ -133,7 +159,7 @@ export default function MembershipForm() {
               {/* Kitni baar kaata gaya? */}
               <div>
                 <label className="block text-xs md:text-sm font-mono text-mjp-yellow uppercase tracking-wider mb-2 flex items-center gap-2">
-                  <HelpCircle size={14} className="text-mjp-red" /> Kitni baar kaata gaya? (Bite Count)
+                  <HelpCircle size={14} className="text-mjp-red" /> Bite Count
                 </label>
                 <input
                   type="number"
@@ -165,6 +191,21 @@ export default function MembershipForm() {
                   </option>
                 ))}
               </select>
+            </div>
+
+            {/* Thoughts */}
+            <div>
+              <label className="block text-xs md:text-sm font-mono text-mjp-yellow uppercase tracking-wider mb-2 flex items-center gap-2">
+                <MessageSquare size={14} className="text-mjp-red" />Message
+              </label>
+              <textarea
+                name="thoughts"
+                rows={4}
+                value={formData.thoughts}
+                onChange={handleChange}
+                placeholder="write your thoughts here..."
+                className="w-full bg-mjp-black/90 border border-mjp-red/30 focus:border-mjp-yellow rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none transition-colors duration-200 resize-y min-h-[100px]"
+              />
             </div>
 
             {/* Terms Disclaimer */}
