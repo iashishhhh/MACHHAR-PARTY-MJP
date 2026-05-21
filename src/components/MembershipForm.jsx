@@ -36,6 +36,7 @@ export default function MembershipForm() {
   });
 
   const [showModal, setShowModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -45,11 +46,11 @@ export default function MembershipForm() {
   };
 
   const handleSubmit = async (e) => {
-
     e.preventDefault();
+    if (isSubmitting) return;
 
+    setIsSubmitting(true);
     try {
-
       const response = await fetch(
         "https://script.google.com/macros/s/AKfycbyzjrPef0l3S9VAXb0mF8IvFF28p3PGm_3dnXJKe8Aawzk3dJ0nPKXqnKbc9DOLLx-QrA/exec",
         {
@@ -76,13 +77,11 @@ export default function MembershipForm() {
       setShowModal(true);
 
     } catch (error) {
-
       console.error("Submission Error:", error);
-
       alert("Failed to submit form");
-
+    } finally {
+      setIsSubmitting(false);
     }
-
   };
 
   const closeModal = () => {
@@ -217,9 +216,14 @@ export default function MembershipForm() {
             <div className="pt-2">
               <button
                 type="submit"
-                className="w-full bg-mjp-red hover:bg-mjp-yellow text-white hover:text-black font-bebas text-3xl tracking-widest py-4 rounded border-2 border-white hover:border-black shadow-[0_0_20px_rgba(229,62,62,0.5)] transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] hover-shake"
+                disabled={isSubmitting}
+                className={`w-full font-bebas text-3xl tracking-widest py-4 rounded border-2 transition-all duration-300 ${
+                  isSubmitting 
+                  ? 'bg-gray-600 text-gray-300 border-gray-500 cursor-not-allowed' 
+                  : 'bg-mjp-red hover:bg-mjp-yellow text-white hover:text-black border-white hover:border-black shadow-[0_0_20px_rgba(229,62,62,0.5)] transform hover:scale-[1.02] active:scale-[0.98] hover-shake'
+                }`}
               >
-                BECOME A TRUE MACHHAR 🦟
+                {isSubmitting ? 'PROCESSING...' : 'BECOME A TRUE MACHHAR 🦟'}
               </button>
             </div>
           </form>
